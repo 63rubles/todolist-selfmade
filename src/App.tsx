@@ -1,30 +1,38 @@
 import React, {useState} from 'react';
 import './App.css';
 import {Todolist} from './Todolist';
+import {v1} from "uuid";
+
+export type FilterValueType = 'All' | 'Active' | 'Completed';
 
 function App() {
 
     let [tasks, setTasks] = useState([
-        {id: 1, title: "HTML&CSS", isDone: true},
-        {id: 2, title: "JS", isDone: true},
-        {id: 3, title: "ReactJS", isDone: false},
-        {id: 4, title: "TypeScript", isDone: false}
+        {id: v1(), title: "HTML&CSS", isDone: true},
+        {id: v1(), title: "JS", isDone: true},
+        {id: v1(), title: "ReactJS", isDone: false},
+        {id: v1(), title: "TypeScript", isDone: false}
     ])
 
-    const [filterValue, setFilterValue]=useState('All')
+    const [filterValue, setFilterValue] = useState('All')
 
-    const removeTask = (elId: number) => {
+    const addTask = (newTitle: string) => {
+        const newTask = {id: v1(), title: newTitle, isDone: false}
+        setTasks([newTask, ...tasks])
+    }
+
+    const removeTask = (id: string) => {
         // tasks=tasks.filter((el)=>el.id!==elId)
-        setTasks(tasks.filter((el) => el.id !== elId))
-        console.log(elId)
+        setTasks(tasks.filter((t) => t.id !== id))
+        console.log(id)
     }
 
-    let filteredTasks=tasks
-    if (filterValue==='Active'){
-        filteredTasks = tasks.filter(el=>!el.isDone)
+    let filteredTasks = tasks
+    if (filterValue === 'Active') {
+        filteredTasks = tasks.filter(el => !el.isDone)
     }
-    if (filterValue==='Completed'){
-        filteredTasks = tasks.filter(el=>el.isDone)
+    if (filterValue === 'Completed') {
+        filteredTasks = tasks.filter(el => el.isDone)
     }
 
     const changeTaskFilter = (nameButton: string) => {
@@ -38,6 +46,7 @@ function App() {
                 title="What to learn"
                 tasks={filteredTasks}
                 removeTask={removeTask}
+                addTask={addTask}
                 changeTaskFilter={changeTaskFilter}
             />
         </div>
